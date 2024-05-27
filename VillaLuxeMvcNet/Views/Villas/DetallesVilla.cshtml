@@ -1,0 +1,93 @@
+﻿@model VillaFechasResevadas
+
+<h1 style="text-align: center">@Model.Villa.Nombre</h1>
+<div style="display: flex; justify-content: center;">
+    <img  style="width: 80%" src="~/img/@Model.Villa.ImageneCollage"/>
+</div>
+<div class="main-container">
+<div class="containerDetalle">
+  <h3>DESCRIPCIÓN</h3>
+  <h6>@Model.Villa.Descripcion</h6>
+  <h4>COMODIDADES</h4>
+  <h6>@Model.Villa.Comodidades</h6>
+  <div class="small-box">
+    <small><i class="fa fa-location-dot  mr-2"></i>  @Model.Villa.Direccion, @Model.Villa.Ubicacion</small>
+  </div>
+  <div class="small-box">
+    <small><i class="fa fa-user  mr-2"></i>  @Model.Villa.Personas Personas</small>
+  </div>
+  <div class="small-box">
+    <small><i class="fa fa-bed  mr-2"></i>  @Model.Villa.NumHabitaciones Habitaciones</small>
+  </div>
+  <div class="small-box">
+    <small><i class="fa fa-bath  mr-2"></i>  @Model.Villa.NumBanios Baños</small>
+  </div>
+</div>
+<div class="form-container">
+<div style="display: flex; justify-content: center;">
+        <form class="form" method="post">
+            <p class="title">Reserva </p> 
+            <input type="hidden" name="idvilla" value="@Model.Villa.IdVilla" />
+            <label  for="start-date">
+                <input required="" placeholder="Fecha Inicio" value="" type="date" class="selector"  id="start-date" name="fechainicio">
+            </label>
+            <label for="end-date">
+                <input required="" placeholder="Fecha Fin" type="date" class="selector"  id="end-date" name="fechafin">
+            </label>
+
+            <label for="price-per-night">
+                <span>Precio: <b>@Model.Villa.PrecioNoche€/noche</b></span>
+            </label>
+                
+                <button class="submit">Reservar</button>
+            
+            
+            
+        </form>
+</div>
+  <div id="total-price"></div>
+</div>
+</div>
+</div>
+
+
+@section Scripts {
+        <script>
+        $(document).ready(function () {
+            // Obtener la lista de fechas deshabilitadas del modelo
+            var fechasDeshabilitadas = @Html.Raw(Json.Serialize(Model.FechasReservadas));
+                console.log(fechasDeshabilitadas)
+
+            // Convertir las fechas al formato adecuado para Flatpickr
+                var fechasDeshabilitadasDate = [];
+                for(var i = 0; i < fechasDeshabilitadas.length; i++){
+                    console.log(1, fechasDeshabilitadas[i])
+                // Eliminar el tiempo "T0:00:00"
+                    var fechaSinTiempo = fechasDeshabilitadas[i].split("T")[0];
+
+                // Cambiar los caracteres "/" por "-"
+                var fechaConGuiones = fechaSinTiempo.replace(/\//g, "-");
+
+                // Reorganizar el orden de los componentes de la fecha
+                var partesFecha = fechaConGuiones.split("-");
+                var fechaFormateada = partesFecha[0] + "-" + partesFecha[1] + "-" + partesFecha[2];
+                    console.log(fechaFormateada)
+
+                // Devolver la fecha formateada
+                    fechasDeshabilitadasDate.push(fechaFormateada);
+                            
+                   }   
+               console.log(fechasDeshabilitadasDate)
+
+                var today = new Date().toISOString().split('T')[0];
+
+            // Inicializar Flatpickr con las fechas deshabilitadas
+            $(".selector").flatpickr({
+                    "disable": fechasDeshabilitadasDate
+            });
+       })
+  
+
+        </script>
+}
+
