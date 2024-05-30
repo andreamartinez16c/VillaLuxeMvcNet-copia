@@ -1,14 +1,27 @@
+using Amazon.S3;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using VillaLuxeMvcNet.Data;
 using VillaLuxeMvcNet.Helpers;
+using VillaLuxeMvcNet.Models;
 using VillaLuxeMvcNet.Repositories;
 using VillaLuxeMvcNet.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+string jsonSecrets = await
+    HelperSecretManager.GetSecretsAsync();
+KeysModel keysModel =
+    JsonConvert.DeserializeObject<KeysModel>(jsonSecrets);
+builder.Services.AddSingleton<KeysModel>(x => keysModel);
+
 // Add services to the container.
+
+builder.Services.AddAWSService<IAmazonS3>();
+builder.Services.AddTransient<ServiceStorageAWS>();
+
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(30));
 

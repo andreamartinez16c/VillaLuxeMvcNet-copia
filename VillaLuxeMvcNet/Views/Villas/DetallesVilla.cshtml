@@ -1,8 +1,12 @@
 ﻿@model VillaFechasResevadas
 
+@{
+    string UrlBucket = keysModel.BucketUrl;
+}
+
 <h1 style="text-align: center">@Model.Villa.Nombre</h1>
 <div style="display: flex; justify-content: center;">
-    <img  style="width: 80%" src="~/img/@Model.Villa.ImageneCollage"/>
+    <img  style="width: 80%" src="@UrlBucket@Model.Villa.ImageneCollage"/>
 </div>
 <div class="main-container">
 <div class="containerDetalle">
