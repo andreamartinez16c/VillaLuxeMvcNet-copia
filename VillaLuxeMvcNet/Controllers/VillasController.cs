@@ -17,11 +17,14 @@ namespace VillaLuxeMvcNet.Controllers
         /*private RepositoryVillas repo;*/
         private IRepositoryVillas service;
         private HelperPathProvider helperPathProvider;
-        public VillasController(IRepositoryVillas service, HelperPathProvider helperPathProvider)
+        private ServiceStorageAWS serviceAWS;
+
+        public VillasController(IRepositoryVillas service, HelperPathProvider helperPathProvider, ServiceStorageAWS serviceAWS)
         {
             /* this.repo = repo;*/
             this.service = service;
             this.helperPathProvider = helperPathProvider;
+            this.serviceAWS = serviceAWS;
         }
 
         public async Task<IActionResult> Index()
@@ -97,7 +100,7 @@ namespace VillaLuxeMvcNet.Controllers
             List<Imagen> imagenes = await this.service.GetImagenesVilla(idvilla);
             foreach (var imagen in imagenes)
             {
-                await this.service.DeleteBlobAsync("villasimagenes", imagen.Imgn);
+                await this.serviceAWS.DeleteFileAsync("villasimagenes");
                 await this.service.DeleteImagenes(imagen.IdImagen);
             }
             await this.service.DeleteVilla(idvilla);
@@ -210,8 +213,9 @@ namespace VillaLuxeMvcNet.Controllers
                 string blobName = file.FileName;
                 using (Stream stream = file.OpenReadStream())
                 {
-                    await this.service.DeleteBlobAsync("villasimagenes", blobName);
+                    await this.serviceAWS.DeleteFileAsync("villasimagenes");
 
+                    await this.serviceAWS.UploadFileAsync(blobName, stream);
                     await this.service
                         .UploadImageToBlobStorageAsync("villasimagenes", blobName, stream);
                 }

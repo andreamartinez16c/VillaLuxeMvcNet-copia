@@ -36,5 +36,16 @@ namespace VillaLuxeMvcNet.Services
                 return false;
             }
         }
+
+        public async Task<bool> DeleteFileAsync(string fileName)
+        {
+            DeleteObjectRequest request = new DeleteObjectRequest
+            {
+                Key = fileName,
+                BucketName = this.BucketName
+            };
+            DeleteObjectResponse response = await this.client.DeleteObjectAsync(request);
+            return response.HttpStatusCode == System.Net.HttpStatusCode.NoContent;
+        }
     }
 }

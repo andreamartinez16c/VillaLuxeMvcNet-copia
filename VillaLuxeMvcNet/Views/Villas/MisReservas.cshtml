@@ -1,5 +1,8 @@
 ﻿@model List<MisReservas>
 
+@{
+    string UrlBucket = keysModel.BucketUrl;
+}
 
 @if (TempData["ReservaConfirmada"] != null)
 {
@@ -22,7 +25,7 @@
         {
                 <div class="cardReservas"> 
                         <div class="headerReservas">
-                            <div class="div_image_vReservas" style="background-image: url('../img/@reserva.Imagen') !important;">
+                            <div class="div_image_vReservas" style="background-image: url('@UrlBucket@reserva.Imagen') !important;">
                             <div class="imageReservas">
                                 <i class="fa-solid fa-check"></i>
                             </div> 
