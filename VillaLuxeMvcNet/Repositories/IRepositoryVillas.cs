@@ -33,7 +33,7 @@ namespace VillaLuxeMvcNet.Repositories
 
 
 
-        Task UploadImageToBlobStorageAsync(string containerName, string blobName, Stream stream);
-        Task DeleteBlobAsync(string containerName, string blobName);
+        //Task UploadImageToBlobStorageAsync(string containerName, string blobName, Stream stream);
+        //Task DeleteBlobAsync(string containerName, string blobName);
     }
 }

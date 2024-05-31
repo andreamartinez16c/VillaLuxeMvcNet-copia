@@ -1,12 +1,24 @@
+using Amazon.S3;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using VillaLuxeMvcNet.Data;
 using VillaLuxeMvcNet.Helpers;
+using VillaLuxeMvcNet.Models;
 using VillaLuxeMvcNet.Repositories;
 using VillaLuxeMvcNet.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+string jsonSecrets = await
+    HelperSecretManager.GetSecretsAsync();
+KeysModel keysModel =
+    JsonConvert.DeserializeObject<KeysModel>(jsonSecrets);
+builder.Services.AddSingleton<KeysModel>(x => keysModel);
+
+builder.Services.AddAWSService<IAmazonS3>();
+builder.Services.AddTransient<ServiceStorageAWS>();
 
 // Add services to the container.
 builder.Services.AddDistributedMemoryCache();
@@ -30,9 +42,9 @@ builder.Services.AddTransient<RepositotyUsuarios>();*/
 //builder.Services.AddTransient<ServiceVillas>();
 /*builder.Services.AddDbContext<VillaContext>
 	(options => options.UseSqlServer(connectionString));*/
-string azureKeys = builder.Configuration.GetValue<string>("AzureKeys:StorageAccount");
-BlobServiceClient blobServiceClient = new BlobServiceClient(azureKeys);
-builder.Services.AddTransient<BlobServiceClient>(x => blobServiceClient);
+//string azureKeys = builder.Configuration.GetValue<string>("AzureKeys:StorageAccount");
+//BlobServiceClient blobServiceClient = new BlobServiceClient(azureKeys);
+//builder.Services.AddTransient<BlobServiceClient>(x => blobServiceClient);
 builder.Services.AddTransient<IRepositoryVillas, ServiceVillas>();
 //string connectionString =
 //    builder.Configuration.GetConnectionString("SqlServerHospital");

@@ -17,11 +17,14 @@ namespace VillaLuxeMvcNet.Controllers
         /*private RepositoryVillas repo;*/
         private IRepositoryVillas service;
         private HelperPathProvider helperPathProvider;
-        public VillasController(IRepositoryVillas service, HelperPathProvider helperPathProvider)
+        private ServiceStorageAWS serviceStorage;
+
+        public VillasController(IRepositoryVillas service, HelperPathProvider helperPathProvider, ServiceStorageAWS storageAWS)
         {
             /* this.repo = repo;*/
             this.service = service;
             this.helperPathProvider = helperPathProvider;
+            this.serviceStorage = storageAWS;
         }
 
         public async Task<IActionResult> Index()
@@ -97,7 +100,7 @@ namespace VillaLuxeMvcNet.Controllers
             List<Imagen> imagenes = await this.service.GetImagenesVilla(idvilla);
             foreach (var imagen in imagenes)
             {
-                await this.service.DeleteBlobAsync("villasimagenes", imagen.Imgn);
+                await this.serviceStorage.DeleteFileAsync(imagen.Imgn);
                 await this.service.DeleteImagenes(imagen.IdImagen);
             }
             await this.service.DeleteVilla(idvilla);
@@ -210,10 +213,10 @@ namespace VillaLuxeMvcNet.Controllers
                 string blobName = file.FileName;
                 using (Stream stream = file.OpenReadStream())
                 {
-                    await this.service.DeleteBlobAsync("villasimagenes", blobName);
+                    await this.serviceStorage.DeleteFileAsync(blobName);
 
-                    await this.service
-                        .UploadImageToBlobStorageAsync("villasimagenes", blobName, stream);
+                    await this.serviceStorage
+                        .UploadFileAsync(blobName, stream);
                 }
                 await this.service.DeleteImagenesName(blobName, villa.IdVilla);
                 await this.service.InsertarImagenes(villa.IdVilla, blobName);
@@ -243,12 +246,12 @@ namespace VillaLuxeMvcNet.Controllers
         public async Task<IActionResult> CreateVilla(VillaTabla villa, List<IFormFile> imagen, IFormFile imagenCollage)
         {
             string blobNameCollage = imagenCollage.FileName;
-            villa.ImagenCollage = blobNameCollage;
+
             VillaTabla villaT = await this.service.CreateVillaAsync(villa);
             using (Stream stream = imagenCollage.OpenReadStream())
             {
-                await this.service
-                    .UploadImageToBlobStorageAsync("villasimagenes", blobNameCollage, stream);
+                await this.serviceStorage
+                    .UploadFileAsync(blobNameCollage, stream);
             }
 
 
@@ -257,8 +260,8 @@ namespace VillaLuxeMvcNet.Controllers
                 string blobName = file.FileName;
                 using (Stream stream = file.OpenReadStream())
                 {
-                    await this.service
-                        .UploadImageToBlobStorageAsync("villasimagenes", blobName, stream);
+                    await this.serviceStorage
+                        .UploadFileAsync(blobName, stream);
                 }
                 await this.service.InsertarImagenes(villaT.IdVilla, blobName);
 
@@ -308,7 +311,7 @@ namespace VillaLuxeMvcNet.Controllers
         public async Task<IActionResult> DeleteImagenModificar(int idimagen, int idvilla, string imagenname)
         {
             await this.service.DeleteImagenes(idimagen);
-            await this.service.DeleteBlobAsync("villasimagenes", imagenname);
+            await this.serviceStorage.DeleteFileAsync(imagenname);
             return RedirectToAction("EditVillas", new { idvilla = idvilla });
         }
 
