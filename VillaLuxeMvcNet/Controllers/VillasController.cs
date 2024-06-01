@@ -246,6 +246,7 @@ namespace VillaLuxeMvcNet.Controllers
         public async Task<IActionResult> CreateVilla(VillaTabla villa, List<IFormFile> imagen, IFormFile imagenCollage)
         {
             string blobNameCollage = imagenCollage.FileName;
+            villa.ImagenCollage = imagenCollage.FileName;
 
             VillaTabla villaT = await this.service.CreateVillaAsync(villa);
             using (Stream stream = imagenCollage.OpenReadStream())
