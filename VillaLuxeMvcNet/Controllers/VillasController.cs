@@ -213,12 +213,9 @@ namespace VillaLuxeMvcNet.Controllers
                 string blobName = file.FileName;
                 using (Stream stream = file.OpenReadStream())
                 {
-                    await this.serviceStorage.DeleteFileAsync(blobName);
-
                     await this.serviceStorage
                         .UploadFileAsync(blobName, stream);
                 }
-                await this.service.DeleteImagenesName(blobName, villa.IdVilla);
                 await this.service.InsertarImagenes(villa.IdVilla, blobName);
             }
 
