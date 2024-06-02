@@ -17,12 +17,12 @@ namespace VillaLuxeMvcNet.Services
     {
         private string UrlApi;
         private MediaTypeWithQualityHeaderValue Header;
-        private BlobServiceClient client;    
-        public ServiceVillas(IConfiguration configuration, BlobServiceClient client)
+        //private BlobServiceClient client;    
+        public ServiceVillas(KeysModel keys /*BlobServiceClient client*/)
         {
             this.Header =new MediaTypeWithQualityHeaderValue("application/json");
-            this.UrlApi = configuration.GetValue<string>("ApiUrls:ApiVillaLuxe");
-            this.client = client;
+            this.UrlApi = keys.ApiVillaLuxe;
+            //this.client = client;
         }
 
         public async Task<string> GetTokenAsync(string username
@@ -126,48 +126,48 @@ namespace VillaLuxeMvcNet.Services
             }
         }
 
-        public async Task<List<BlobModel>>
-            GetBlobsAsync(string containerName)
-        {
-            //RECUPERAMOS EL CLIENT DEL CONTAINER
-            BlobContainerClient containerClient =
-                this.client.GetBlobContainerClient(containerName);
-            List<BlobModel> models = new List<BlobModel>();
-            await foreach (BlobItem item in
-                containerClient.GetBlobsAsync())
-            {
-                //name, containerName, Url
-                //DEBEMOS CREAR UN BLOBCLIENT SI NECESITAMOS 
-                //TENER MAS INFORMACION DEL BLOB
-                BlobClient blobClient =
-                    containerClient.GetBlobClient(item.Name);
-                BlobModel blob = new BlobModel();
-                blob.Nombre = item.Name;
-                blob.Contenedor = containerName;
-                blob.Url = blobClient.Uri.AbsoluteUri;
-                models.Add(blob);
-            }
-            return models;
-        }
+        //public async Task<List<BlobModel>>
+        //    GetBlobsAsync(string containerName)
+        //{
+        //    //RECUPERAMOS EL CLIENT DEL CONTAINER
+        //    BlobContainerClient containerClient =
+        //        this.client.GetBlobContainerClient(containerName);
+        //    List<BlobModel> models = new List<BlobModel>();
+        //    await foreach (BlobItem item in
+        //        containerClient.GetBlobsAsync())
+        //    {
+        //        //name, containerName, Url
+        //        //DEBEMOS CREAR UN BLOBCLIENT SI NECESITAMOS 
+        //        //TENER MAS INFORMACION DEL BLOB
+        //        BlobClient blobClient =
+        //            containerClient.GetBlobClient(item.Name);
+        //        BlobModel blob = new BlobModel();
+        //        blob.Nombre = item.Name;
+        //        blob.Contenedor = containerName;
+        //        blob.Url = blobClient.Uri.AbsoluteUri;
+        //        models.Add(blob);
+        //    }
+        //    return models;
+        //}
 
 
-        public async Task UploadImageToBlobStorageAsync(string containerName, string blobName, Stream stream)
-        {
-            BlobContainerClient containerClient = this.client.GetBlobContainerClient(containerName);
-            bool existe = false;
-            foreach (var item in await this.GetBlobsAsync(containerName))
-            {
-                if (item.Nombre==blobName)
-                {
-                    existe = true;
-                }
-            }
-            if (!existe)
-            {
-                    await containerClient.UploadBlobAsync(blobName, stream);
+        //public async Task UploadImageToBlobStorageAsync(string containerName, string blobName, Stream stream)
+        //{
+        //    BlobContainerClient containerClient = this.client.GetBlobContainerClient(containerName);
+        //    bool existe = false;
+        //    foreach (var item in await this.GetBlobsAsync(containerName))
+        //    {
+        //        if (item.Nombre==blobName)
+        //        {
+        //            existe = true;
+        //        }
+        //    }
+        //    if (!existe)
+        //    {
+        //            await containerClient.UploadBlobAsync(blobName, stream);
 
-            }
-        }
+        //    }
+        //}
 
         //public async Task<string> UploadImageAsync(IFormFile image, string containerName)
         //{
@@ -272,13 +272,13 @@ namespace VillaLuxeMvcNet.Services
 
 
         //METODO PARA ELIMINAR UN BLOB DE UN CONTAINER
-        public async Task DeleteBlobAsync(string containerName
-            , string blobName)
-        {
-            BlobContainerClient containerClient =
-                this.client.GetBlobContainerClient(containerName);
-            await containerClient.DeleteBlobAsync(blobName);
-        }
+        //public async Task DeleteBlobAsync(string containerName
+        //    , string blobName)
+        //{
+        //    BlobContainerClient containerClient =
+        //        this.client.GetBlobContainerClient(containerName);
+        //    await containerClient.DeleteBlobAsync(blobName);
+        //}
 
 
         public async Task<Imagen> FindImagenVilla(int idimagen)
@@ -346,7 +346,7 @@ namespace VillaLuxeMvcNet.Services
 
         public async Task<List<Villa>> GetVillasUnicasAsync()
         {
-            string request = "api/villas/villasunicas";
+            string request = "api/villas/";
             List<Villa> data = await this.CallApiAsync<List<Villa>>(request);
             return data;
         }
@@ -381,7 +381,7 @@ namespace VillaLuxeMvcNet.Services
 
         public async Task<Usuario> FindUsuarioEmailPassword(string email, string password)
         {
-            string request = "api/Usuario/findUser/" + email + "/" + password;
+            string request = "api/Usuarios/findUser/" + email + "/" + password;
             return await this.CallApiAsync<Usuario>(request);
         }
 

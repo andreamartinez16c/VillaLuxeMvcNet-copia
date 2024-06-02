@@ -6,7 +6,7 @@
 }
 
 <div style="display: flex; justify-content: center; padding-top: 30px; padding-bottom: 30px;">
-    <form class="form" method="post" style="max-width:50% !important;">
+    <form class="form" method="post" style="max-width:50% !important"; enctype="multipart/form-data">
         <p class="title">Modificar Villa</p> 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <label>
@@ -78,10 +78,8 @@
                 </div>
                 }
                 
-            }else{
-            <input type="file" class="input" name="imagen" multiple>
             }
-</label>
+            <input type="file" class="input" name="imagen" multiple>
 
             </label>
             <label>
