@@ -8,6 +8,7 @@ using VillaLuxeMvcNet.Repositories;
 using VillaLuxeMvcNet.Services;
 using static System.Net.Mime.MediaTypeNames;
 using System.Security.Claims;
+using Amazon.Runtime.Internal.Util;
 
 
 namespace VillaLuxeMvcNet.Controllers
@@ -18,13 +19,15 @@ namespace VillaLuxeMvcNet.Controllers
         private IRepositoryVillas service;
         private HelperPathProvider helperPathProvider;
         private ServiceStorageAWS serviceStorage;
+        private ServiceAWSCache serviceCache;
 
-        public VillasController(IRepositoryVillas service, HelperPathProvider helperPathProvider, ServiceStorageAWS storageAWS)
+        public VillasController(IRepositoryVillas service, HelperPathProvider helperPathProvider, ServiceStorageAWS storageAWS, ServiceAWSCache serviceCache)
         {
             /* this.repo = repo;*/
             this.service = service;
             this.helperPathProvider = helperPathProvider;
             this.serviceStorage = storageAWS;
+            this.serviceCache = serviceCache;
         }
 
         public async Task<IActionResult> Index()
@@ -313,7 +316,24 @@ namespace VillaLuxeMvcNet.Controllers
             return RedirectToAction("EditVillas", new { idvilla = idvilla });
         }
 
+        public async Task<IActionResult> SeleccionarFavorito(int idvilla)
+        {
+            Villa villa = await this.service.FindVillaAsync(idvilla);
+            await this.serviceCache.AddVillaFavoritaAsync(villa);
+            return RedirectToAction("Favoritos");
+        }
 
+        public async Task<IActionResult> Favoritos()
+        {
+            List<Villa> villasFav = await this.serviceCache.GetVillasFavoritasAsync();
+            return View(villasFav);
+        }
+
+        public async Task<IActionResult> DeleteFavorito(int IdVilla)
+        {
+            await this.serviceCache.DeleteVillaFavoritaAsync(IdVilla);
+            return RedirectToAction("Favoritos");
+        }
 
     }
 

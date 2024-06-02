@@ -19,6 +19,15 @@ builder.Services.AddSingleton<KeysModel>(x => keysModel);
 
 builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddTransient<ServiceStorageAWS>();
+builder.Services.AddTransient<ServiceAWSCache>();
+
+string connectionString = builder.Configuration.GetConnectionString("CacheRedis");
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = connectionString;
+    options.InstanceName = "cache-villas";
+});
 
 // Add services to the container.
 builder.Services.AddDistributedMemoryCache();
