@@ -4,43 +4,47 @@
     string UrlBucket = keysModel.BucketUrl;
 }
 
-<div class="containerReservas">
     @if(Model != null)
     {
-        <div class="row">
-            @foreach (Villa villa in Model)
-            {
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="package-item bg-white mb-2">
-                        <img style="aspect-ratio:4/3" class="img-fluid" src="@UrlBucket@villa.Imagenes" alt="">
-                        <div class="p-4">
-                            <div class="d-flex justify-content-between mb-3">
-                                <small class="m-0"><i class="fa fa-map-marker-alt text-icons mr-2"></i> @villa.Ubicacion</small>
-                                <small class="m-0"><i class="fa fa-bed text-icons mr-2"></i> @villa.NumHabitaciones Room</small>
-                                <small class="m-0"><i class="fa fa-user text-icons mr-2"></i> @villa.Personas Person</small>
-                            </div>
-                            <div style="justify-content: center; display: flex;">
-                                <a class="h2 text-decoration-none text-icons fw-bold" style="text-aling" asp-controller="Villas"
-                                   asp-action="DetallesVilla" asp-route-idvilla="@villa.IdVilla">
-                                    @villa.Nombre
-                                </a>
-                            </div>
-                            <div class="border-top mt-4 pt-4">
-                                <div class="d-flex justify-content-end">
-                                    <!-- <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6> -->
-                                    <h5 class="m-0">@villa.PrecioNoche €/noche</h5>
+        <div class="containerReservas">
+            <div class="row">
+                @foreach (Villa villa in Model)
+                {
+                    <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="cardReservas">
+                        <div class="headerReservas">
+                            <div class="div_image_vReservas" style="background-image: url('@UrlBucket@villa.Imagenes') !important;">
+                                <div class="imageReservas">
+                                    <i class="bi bi-hearts"></i>
                                 </div>
                             </div>
-                            <a asp-controller="Villas"
-                               asp-action="DeleteFavorito"
-                               asp-route-IdVilla="@villa.IdVilla"
-                               class="btn btn-danger">
-                                Eliminar favorito
-                            </a>
+                            <div class="contentReservas">
+                                <span class="titleReservas">@villa.Nombre</span>
+                                <hr />
+                                <div class="d-flex justify-content-between mb-3">
+                                    <small class="m-0"><i class="fa fa-map-marker-alt text-icons mr-2"></i> @villa.Ubicacion</small>
+                                    <small class="m-0"><i class="fa fa-bed text-icons mr-2"></i> @villa.NumHabitaciones Room</small>
+                                    <small class="m-0"><i class="fa fa-user text-icons mr-2"></i> @villa.Personas Person</small>
+                                </div>
+                                <div class="border-top mt-4 pt-4">
+                                    <div class="d-flex justify-content-start">
+                                        <!-- <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6> -->
+                                        <h5 class="m-0">@villa.PrecioNoche €/noche</h5>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <a class="h2 text-decoration-none text-icons fw-bold" style="text-aling" asp-controller="Villas"
+                                           asp-action="DeleteFavorito" asp-route-IdVilla="@villa.IdVilla">
+                                            Eliminar Favorito
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                    </div>
+                }
+            </div>
         </div>
     }
     else
@@ -49,4 +53,3 @@
             <h1 class="h1" style="padding-top:20px; text-align:center">No hay villas favoritas!!</h1>
         </div>
     }
-</div>
