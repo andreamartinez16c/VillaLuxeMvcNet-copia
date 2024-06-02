@@ -4,50 +4,49 @@
     string UrlBucket = keysModel.BucketUrl;
 }
 
-<h1>Villas Favoritas</h1>
-
-@if(Model != null)
-{
-    <div class="row">
-        @foreach (Villa villa in Model)
-        {
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="package-item bg-white mb-2">
-                    <img style="aspect-ratio:4/3" class="img-fluid" src="@UrlBucket@villa.Imagenes" alt="">
-                    <div class="p-4">
-                        <div class="d-flex justify-content-between mb-3">
-                            <small class="m-0"><i class="fa fa-map-marker-alt text-icons mr-2"></i> @villa.Ubicacion</small>
-                            <small class="m-0"><i class="fa fa-bed text-icons mr-2"></i> @villa.NumHabitaciones Room</small>
-                            <small class="m-0"><i class="fa fa-user text-icons mr-2"></i> @villa.Personas Person</small>
-                        </div>
-                        <div style="justify-content: center; display: flex;">
-                            <a class="h2 text-decoration-none text-icons fw-bold" style="text-aling" asp-controller="Villas"
-                               asp-action="DetallesVilla" asp-route-idvilla="@villa.IdVilla">
-                                @villa.Nombre
+<div class="containerReservas">
+    @if(Model != null)
+    {
+        <div class="row">
+            @foreach (Villa villa in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="package-item bg-white mb-2">
+                        <img style="aspect-ratio:4/3" class="img-fluid" src="@UrlBucket@villa.Imagenes" alt="">
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between mb-3">
+                                <small class="m-0"><i class="fa fa-map-marker-alt text-icons mr-2"></i> @villa.Ubicacion</small>
+                                <small class="m-0"><i class="fa fa-bed text-icons mr-2"></i> @villa.NumHabitaciones Room</small>
+                                <small class="m-0"><i class="fa fa-user text-icons mr-2"></i> @villa.Personas Person</small>
+                            </div>
+                            <div style="justify-content: center; display: flex;">
+                                <a class="h2 text-decoration-none text-icons fw-bold" style="text-aling" asp-controller="Villas"
+                                   asp-action="DetallesVilla" asp-route-idvilla="@villa.IdVilla">
+                                    @villa.Nombre
+                                </a>
+                            </div>
+                            <div class="border-top mt-4 pt-4">
+                                <div class="d-flex justify-content-end">
+                                    <!-- <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6> -->
+                                    <h5 class="m-0">@villa.PrecioNoche €/noche</h5>
+                                </div>
+                            </div>
+                            <a asp-controller="Villas"
+                               asp-action="DeleteFavorito"
+                               asp-route-IdVilla="@villa.IdVilla"
+                               class="btn btn-danger">
+                                Eliminar favorito
                             </a>
                         </div>
-                        <div class="border-top mt-4 pt-4">
-                            <div class="d-flex justify-content-end">
-                                <!-- <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5 <small>(250)</small></h6> -->
-                                <h5 class="m-0">@villa.PrecioNoche €/noche</h5>
-                            </div>
-                        </div>
-                        <a asp-controller="Villas"
-                           asp-action="DeleteFavorito"
-                           asp-route-IdVilla="@villa.IdVilla"
-                           class="btn btn-danger">
-                            Eliminar favorito
-                        </a>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-}
-else
-{
-    <div style="height:500px">
-        <h1 class="h1" style="padding-top:20px; text-align:center">No hay villas favoritas!!</h1>
-    </div>
-}
-
+            }
+        </div>
+    }
+    else
+    {
+        <div style="height:500px">
+            <h1 class="h1" style="padding-top:20px; text-align:center">No hay villas favoritas!!</h1>
+        </div>
+    }
+</div>

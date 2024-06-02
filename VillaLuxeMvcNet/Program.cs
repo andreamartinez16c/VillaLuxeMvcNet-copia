@@ -11,8 +11,7 @@ using VillaLuxeMvcNet.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string jsonSecrets = await
-    HelperSecretManager.GetSecretsAsync();
+string jsonSecrets = await HelperSecretManager.GetSecretsAsync();
 KeysModel keysModel =
     JsonConvert.DeserializeObject<KeysModel>(jsonSecrets);
 builder.Services.AddSingleton<KeysModel>(x => keysModel);
